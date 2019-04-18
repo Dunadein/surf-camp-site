@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SurfLevel.Contracts.Interfaces.Services;
-using SurfLevel.Contracts.ViewModels.Search;
+using SurfLevel.Contracts.Models.ViewModels.Search;
 using System.Threading.Tasks;
 
 namespace SurfLevel.Web.Controllers
@@ -16,8 +16,12 @@ namespace SurfLevel.Web.Controllers
             _searchProvider = searchProvider;
         }
 
-        [HttpGet("")]
-        public async Task<SearchResult> GetAvailablePackages([FromBody]SearchRequest request)
-            => await _searchProvider.SearchAvailableResources(request);
+        [HttpGet("get-hash")]
+        public async Task<string> GetHashedRequest([FromBody]SearchRequest request)
+            => await _searchProvider.GetHashedRequest(request);
+
+        [HttpGet("get-packages/{hash:string?}")]
+        public async Task<SearchPackagesResult> GetAvailablePackages([FromRoute]string hash)
+            => await _searchProvider.SearchAvailablePackages(hash);
     }
 }

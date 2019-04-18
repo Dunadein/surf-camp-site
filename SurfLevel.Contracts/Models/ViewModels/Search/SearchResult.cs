@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using SurfLevel.Contracts.Models.ViewModels.Packages;
+using System.Collections.Generic;
 
-namespace SurfLevel.Contracts.ViewModels.Search
+namespace SurfLevel.Contracts.Models.ViewModels.Search
 {
-    public class SearchResult
+    public class SearchPackagesResult
     {
-        public SearchResult()
+        public SearchPackagesResult()
         {
-            Packages = new List<ViewPackage>();
+            Packages = new List<ViewPackageWithId>();
         }
 
-        public List<ViewPackage> Packages { get; set; }
+        public List<ViewPackageWithId> Packages { get; set; }
     }
 }

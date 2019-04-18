@@ -1,6 +1,6 @@
 ﻿using SurfLevel.Contracts.Interfaces.Repositories;
 using SurfLevel.Contracts.Interfaces.Services;
-using SurfLevel.Contracts.ViewModels;
+using SurfLevel.Contracts.Models.ViewModels.Packages;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,7 +28,8 @@ namespace SurfLevel.Domain.Services
             {
                 Label = p.ShortLabel,
                 LocaleFolder = currentLocale,
-                Price = p.IsWithAccommodation ? p.PromoPrice ?? p.MinDayPrice * 7 : p.MinDayPrice
+                Price = p.IsWithAccommodation ? p.PromoPrice ?? p.MinDayPrice * 7 : p.MinDayPrice,
+                IsDefault = p.IsWithAccommodation && p.IsDefault
             }));
         }
     }

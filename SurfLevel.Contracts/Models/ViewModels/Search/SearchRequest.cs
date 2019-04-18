@@ -1,21 +1,15 @@
-﻿using SurfLevel.Contracts.Models.ViewModels;
-using System;
+﻿using System;
 
-namespace SurfLevel.Contracts.ViewModels.Search
+namespace SurfLevel.Contracts.Models.ViewModels.Search
 {
     public class SearchRequest : Request
     {
-        public DateTime From { get; set; }
-        public DateTime? Till { get; set; }
-        public int Pax { get; set; }
-        public bool JustLessons { get; set; }
-
         public override void Validate()
         {
-            if (!JustLessons && !Till.HasValue)
+            if (!WithAccommodation && !Till.HasValue)
                 throw new ArgumentException("End date wasn't provide");
 
-            if (DateTime.UtcNow > From)
+            if (DateTime.UtcNow.Date >= From.Date)
                 throw new ArgumentException($"The From Date of value {From.ToShortDateString()} couldn't be served die to booking policy");
         }
     }

@@ -21,17 +21,6 @@ namespace SurfLevel.Repository.Repositories
         {
             var villas = await _context.Villas.Include(p => p.Rooms).ToListAsync();
 
-            var accommodationType = await _context.Accommodations.AsNoTracking().ToListAsync();
-
-            foreach (var villa in villas)
-            {
-                foreach(var room in villa.Rooms)
-                {
-                    _context.AccommodationPrices.AsNoTracking().Where(p => p.RoomId == room.Id).Load();
-                    //room.Accommodations.Add()
-                }
-            }
-
             return villas;
         }
     }

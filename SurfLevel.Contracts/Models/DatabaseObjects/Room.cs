@@ -14,7 +14,7 @@ namespace SurfLevel.Contracts.Models.DatabaseObjects
         public int Id { get; set; }
         public int VillaId { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string DescriptionFolder { get; set; }
         #endregion
 
         public virtual ICollection<Accommodation> Accommodations { get; set; }

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SurfLevel.Contracts.Interfaces.Services;
-using SurfLevel.Contracts.ViewModels;
+using SurfLevel.Contracts.Models.ViewModels.Packages;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
