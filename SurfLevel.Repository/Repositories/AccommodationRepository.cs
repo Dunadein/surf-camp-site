@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SurfLevel.Contracts.Interfaces.Repositories;
 using SurfLevel.Contracts.Models.DatabaseObjects;
-using SurfLevel.Repository.Providers;
+using SurfLevel.Repository.DBProviders;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SurfLevel.Repository.Repositories
@@ -19,9 +18,14 @@ namespace SurfLevel.Repository.Repositories
 
         public async Task<IEnumerable<Villa>> GetAccommodationsAsync()
         {
-            var villas = await _context.Villas.Include(p => p.Rooms).ToListAsync();
+            return await _context.Villas.Include(p => p.Rooms)
+                .ThenInclude(p => p.Prices).ThenInclude(p => p.Accommodation).ToListAsync();
+        }
 
-            return villas;
+        public async Task<Room> GetRoomByIdAsync(int roomId)
+        {
+            return await _context.Rooms.Include(p => p.Prices).ThenInclude(p => p.Accommodation)
+                .FirstOrDefaultAsync(p => p.Id == roomId);
         }
     }
 }

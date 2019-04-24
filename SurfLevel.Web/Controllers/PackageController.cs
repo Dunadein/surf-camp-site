@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using SurfLevel.Contracts.Interfaces.Services;
-using SurfLevel.Contracts.Models.ViewModels.Packages;
+using SurfLevel.Domain.IProviders;
+using SurfLevel.Domain.ViewModels.Package;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,7 +17,7 @@ namespace SurfLevel.Web.Controllers
             _packageProvider = packageProvider;
         }
 
-        [HttpGet("list")]
+        [HttpGet("get-packages")]
         public async Task<IEnumerable<ViewPackage>> GetPackages()
         {
             return await _packageProvider.GetPackageListAsync();

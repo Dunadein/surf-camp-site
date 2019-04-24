@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using NUnit.Framework;
 using SurfLevel.Contracts.Interfaces.Services;
-using SurfLevel.Contracts.ViewModels.Search;
+using SurfLevel.Contracts.Models.ViewModels.Search.DTO;
 using SurfLevel.Domain.Services;
 using System;
 

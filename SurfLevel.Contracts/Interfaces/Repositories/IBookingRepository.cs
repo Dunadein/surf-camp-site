@@ -7,6 +7,8 @@ namespace SurfLevel.Contracts.Interfaces.Repositories
 {
     public interface IBookingRepository
     {
-        Task<IEnumerable<Order>> GetBookingsAsync(DateTime? startFrom = null);
+        Task<List<Order>> GetBookingsAsync(DateTime? startFrom = null);
+
+        Task<List<Order>> GetBookingsInPeriodAsync(DateTime periodStart, DateTime? periodEnd = null);
     }
 }

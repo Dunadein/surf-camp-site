@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using SurfLevel.Contracts.Interfaces.Services;
+using SurfLevel.Domain;
 using SurfLevel.Domain.Services;
 
 namespace SurfLevel.Web.Infrastructure.Extensions

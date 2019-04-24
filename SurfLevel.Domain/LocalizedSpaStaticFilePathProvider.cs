@@ -1,6 +1,6 @@
 ﻿using SurfLevel.Contracts.Interfaces.Services;
 
-namespace SurfLevel.Domain.Services
+namespace SurfLevel.Domain
 {
     public class LocalizedSpaStaticFilePathProvider
     {

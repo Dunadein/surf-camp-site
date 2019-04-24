@@ -1,26 +1,32 @@
 ﻿using SurfLevel.Contracts.Interfaces.Repositories;
 using SurfLevel.Contracts.Interfaces.Services;
-using SurfLevel.Contracts.Models.ViewModels.Packages;
+using SurfLevel.Domain.IProviders;
+using SurfLevel.Domain.ViewModels.Package;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SurfLevel.Domain.Services
+namespace SurfLevel.Domain
 {
     public class PackageProvider : IPackageProvider
-    {
+    {       
         private readonly IPackageRepository _repository;
         private readonly IRegionByLangService _langService;
+        private readonly IPricingService _pricing;
 
-        public PackageProvider(IPackageRepository packageRepository, IRegionByLangService langService)
+        public PackageProvider(IPackageRepository packageRepository, 
+            IRegionByLangService langService,
+            IPricingService pricingService)
         {
             _repository = packageRepository;
             _langService = langService;
+            _pricing = pricingService;
         }
 
-        public async Task<IEnumerable<ViewPackage>> GetPackageListAsync()
+        public async Task<List<ViewPackage>> GetPackageListAsync()
         {
-            var packages = await _repository.GetAllPackagesAsync(false);
+            var packages = await _repository.GetAllPackagesAsync();
 
             var currentLocale = _langService.GetUserLocale();
 
@@ -28,7 +34,7 @@ namespace SurfLevel.Domain.Services
             {
                 Label = p.ShortLabel,
                 LocaleFolder = currentLocale,
-                Price = p.IsWithAccommodation ? p.PromoPrice ?? p.MinDayPrice * 7 : p.MinDayPrice,
+                Price = _pricing.CalculatePackagePromoPrice(p, DateTime.Now),
                 IsDefault = p.IsWithAccommodation && p.IsDefault
             }));
         }

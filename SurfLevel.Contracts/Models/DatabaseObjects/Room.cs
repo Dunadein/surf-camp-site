@@ -6,7 +6,6 @@ namespace SurfLevel.Contracts.Models.DatabaseObjects
     {
         public Room()
         {
-            Accommodations = new HashSet<Accommodation>();
             Prices = new HashSet<AccommodationPrice>();
         }
 
@@ -17,7 +16,6 @@ namespace SurfLevel.Contracts.Models.DatabaseObjects
         public string DescriptionFolder { get; set; }
         #endregion
 
-        public virtual ICollection<Accommodation> Accommodations { get; set; }
         public virtual ICollection<AccommodationPrice> Prices { get; set; }
     }
 }

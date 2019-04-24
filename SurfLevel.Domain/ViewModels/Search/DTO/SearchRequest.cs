@@ -1,12 +1,13 @@
-﻿using System;
+﻿using SurfLevel.Contracts.Models.DTO;
+using System;
 
-namespace SurfLevel.Contracts.Models.ViewModels.Search
+namespace SurfLevel.Domain.ViewModels.Search.DTO
 {
     public class SearchRequest : Request
     {
         public override void Validate()
         {
-            if (!WithAccommodation && !Till.HasValue)
+            if (WithAccommodation && !Till.HasValue)
                 throw new ArgumentException("End date wasn't provide");
 
             if (DateTime.UtcNow.Date >= From.Date)

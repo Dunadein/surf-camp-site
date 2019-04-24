@@ -9,8 +9,8 @@
         public string LastName { get; set; }
         public int PackageId { get; set; }
         public int? AccommodationPriceId { get; set; }
-        public decimal? PrepayPercent { get; set; }
-        public int Duration { get; set; }
+        public int? ServiceDays { get; set; }
+        public decimal? PrepayPercent { get; set; }        
         public decimal Price { get; set; }
         #endregion
 

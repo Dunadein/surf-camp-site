@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SurfLevel.Contracts.Interfaces.Services;
-using SurfLevel.Contracts.Models.ViewModels.Search;
+using SurfLevel.Contracts.Models.DTO;
+using SurfLevel.Domain.IProviders;
+using SurfLevel.Domain.ViewModels.Package;
+using SurfLevel.Domain.ViewModels.Search.DTO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SurfLevel.Web.Controllers
@@ -16,12 +19,28 @@ namespace SurfLevel.Web.Controllers
             _searchProvider = searchProvider;
         }
 
-        [HttpGet("get-hash")]
-        public async Task<string> GetHashedRequest([FromBody]SearchRequest request)
-            => await _searchProvider.GetHashedRequest(request);
+        [HttpPost("create-hash")]
+        public async Task<string> MakeHashedRequest([FromBody]SearchRequest request)
+            => await _searchProvider.GetHashedRequestAsync(request);
 
-        [HttpGet("get-packages/{hash:string?}")]
-        public async Task<SearchPackagesResult> GetAvailablePackages([FromRoute]string hash)
-            => await _searchProvider.SearchAvailablePackages(hash);
+        [HttpGet("get-request/{hash:string?}")]
+        public async Task<SearchRequest> GetSearchRequest([FromRoute]string hash)
+            => await _searchProvider.GetRequestFromHashAsync(hash);
+
+        [HttpGet("get-available-packages/{hash:string?}")]
+        public async Task<IEnumerable<ViewPackageWithId>> GetAvailablePackages([FromRoute]string hash)
+            => await _searchProvider.SearchAvailablePackagesAsync(hash);
+
+        [HttpGet("get-service-prices/{hash:string}")]
+        public async Task<IEnumerable<PaxPrice>> GetServicePackagePrices([FromRoute]string hash, [FromBody]int packageId)
+            => await _searchProvider.SearchPackagePrices(hash, packageId);
+
+        [HttpGet("get-accommodation-prices/{hash:string}")]
+        public async Task<IDictionary<int, List<PaxPrice>>> GetServiceWithAccommodationPackagePrices([FromRoute]string hash, [FromBody]int packageId)
+            => await _searchProvider.SearchPackageWithAccommodationPrices(hash, packageId);
+
+        [HttpGet("{hash:string?}")]
+        public async Task<SearchByDefaultResult> GetDefaultSearchResult([FromRoute]string hash)
+            => await _searchProvider.SearchByDefaultAsync(hash);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using SurfLevel.Contracts.Interfaces.Services;
-using SurfLevel.Contracts.Models.ViewModels;
+using SurfLevel.Contracts.Models.DTO;
 using System;
 using System.Linq;
 using System.Text;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SurfLevel.Contracts.Models.DatabaseObjects;
 
-namespace SurfLevel.Repository.Providers
+namespace SurfLevel.Repository.DBProviders
 {
     public class AccommodationContext : DbContext
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SurfLevel.Contracts.Models.ViewModels
+namespace SurfLevel.Contracts.Models.DTO
 {
     public abstract class Request
     {

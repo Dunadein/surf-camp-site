@@ -1,4 +1,4 @@
-﻿using SurfLevel.Contracts.Models.ViewModels;
+﻿using SurfLevel.Contracts.Models.DTO;
 
 namespace SurfLevel.Contracts.Interfaces.Services
 {

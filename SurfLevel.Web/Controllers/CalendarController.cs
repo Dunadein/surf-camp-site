@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SurfLevel.Contracts.Interfaces.Services;
-using SurfLevel.Contracts.Models.ViewModels;
+using SurfLevel.Contracts.Interfaces.Providers;
+using SurfLevel.Domain.ViewModels.Calendar;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

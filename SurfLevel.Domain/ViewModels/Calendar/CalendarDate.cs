@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SurfLevel.Contracts.Models.ViewModels
+namespace SurfLevel.Domain.ViewModels.Calendar
 {
     public class CalendarDate
     {

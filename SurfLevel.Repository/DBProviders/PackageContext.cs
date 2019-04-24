@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SurfLevel.Contracts.Models.DatabaseObjects;
 
-namespace SurfLevel.Repository.Providers
+namespace SurfLevel.Repository.DBProviders
 {
     public class PackageContext : DbContext
     {
@@ -11,6 +11,8 @@ namespace SurfLevel.Repository.Providers
         }
 
         public DbSet<Package> Packages { get; set; }
+
+        public DbSet<PackagePeriodPrice> PackagePrices { get; set; }
 
         public DbSet<OutOfServicePeriod> StopPeriods { get; set; }
     }

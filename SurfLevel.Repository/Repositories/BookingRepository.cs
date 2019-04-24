@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using SurfLevel.Contracts.Interfaces.Repositories;
 using SurfLevel.Contracts.Models.DatabaseObjects;
-using SurfLevel.Repository.Providers;
+using SurfLevel.Repository.DBProviders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,15 @@ using System.Threading.Tasks;
 
 namespace SurfLevel.Repository.Repositories
 {
+    internal static partial class Extension
+    {
+        public static IIncludableQueryable<Order, Accommodation> EndChain(this IQueryable<Order> chain)
+        {
+            return chain.Include(p => p.Guests).ThenInclude(p => p.Package)
+                .Include(p => p.Guests).ThenInclude(p => p.AccommodationPrice).ThenInclude(p => p.Accommodation);               
+        }
+    }
+
     public class BookingRepository : IBookingRepository
     {
         private readonly BookingContext _context;
@@ -22,10 +32,18 @@ namespace SurfLevel.Repository.Repositories
             _package = packageRepository;
         }
 
-        public async Task<IEnumerable<Order>> GetBookingsAsync(DateTime? startFrom = null)
+        public async Task<List<Order>> GetBookingsAsync(DateTime? startFrom = null)
         {
-            return await _context.Orders.Where(p => startFrom.HasValue ? p.DateFrom >= startFrom.Value : true)
-                .Include(p => p.Guests).AsNoTracking().ToListAsync();
+            return await _context.Orders.Where(p =>
+                startFrom.HasValue ? p.DateFrom >= startFrom.Value : true
+            ).EndChain().AsNoTracking().ToListAsync();
         }
+
+        public async Task<List<Order>> GetBookingsInPeriodAsync(DateTime periodStart, DateTime? periodEnd = null)
+        {
+            return await _context.Orders.Where(p =>
+                p.DateTill >= periodStart && (periodEnd.HasValue ? p.DateFrom <= periodEnd.Value : true)
+            ).EndChain().AsNoTracking().ToListAsync();
+        }        
     }
 }
