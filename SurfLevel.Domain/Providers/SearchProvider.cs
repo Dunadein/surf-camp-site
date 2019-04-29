@@ -2,7 +2,7 @@
 using SurfLevel.Contracts.Interfaces.Services;
 using SurfLevel.Contracts.Models.DatabaseObjects;
 using SurfLevel.Contracts.Models.DTO;
-using SurfLevel.Domain.IProviders;
+using SurfLevel.Domain.Providers.Interfaces;
 using SurfLevel.Domain.ViewModels.Package;
 using SurfLevel.Domain.ViewModels.Search;
 using SurfLevel.Domain.ViewModels.Search.DTO;
@@ -11,20 +11,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SurfLevel.Domain
+namespace SurfLevel.Domain.Providers
 {
     public class SearchProvider : ISearchProvider
     {
         private readonly IPackageRepository _packageRepository;
         private readonly IAccommodationRepository _accommodationRepository;
         private readonly ISearchHasherService _hasher;
-        private readonly IRegionByLangService _locale;
+        private readonly ILocaleService _locale;
         private readonly IPricingService _pricing;
 
         public SearchProvider(IPackageRepository packageRepository,
             IAccommodationRepository accommodationRepository,
             ISearchHasherService hasherService,
-            IRegionByLangService localeService,
+            ILocaleService localeService,
             IPricingService pricingService)
         {
             _packageRepository = packageRepository;
@@ -54,12 +54,12 @@ namespace SurfLevel.Domain
             return request;
         }
 
-        private async Task<IEnumerable<Package>> GetPackagesByRequest(SearchRequest request)
+        private async Task<List<Package>> GetPackagesByRequest(SearchRequest request)
         {
-            var packages = await _packageRepository.GetAllPackagesAsync();
-
-            return packages.Where(p => p.IsWithAccommodation == request.WithAccommodation
+            var packages = await _packageRepository.GetPackagesAsync(p => p.IsWithAccommodation == request.WithAccommodation
                 && !p.OutOfServicePeriods.Any(t => t.Start <= request.From && t.End >= request.Till));
+
+            return packages;
         }
 
         private async Task<Package> GetPackageById(SearchRequest request, int packageId)
@@ -160,11 +160,11 @@ namespace SurfLevel.Domain
             if (suitable.Count == 0)
                 return result;
 
-            var accommodations = await _accommodationRepository.GetAccommodationsAsync();
+            var accommodations = await _accommodationRepository.GetAccommodationsAsync(p => p.IsEnabled);
 
             var locale = _locale.GetUserLocale();
 
-            foreach (var villa in accommodations.Where(p => p.IsEnabled))
+            foreach (var villa in accommodations)
             {
                 if (villa.Rooms.Any(p => suitable.ContainsKey(p.Id)))
                 {

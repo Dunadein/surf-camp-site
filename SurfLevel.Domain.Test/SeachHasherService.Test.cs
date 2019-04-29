@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using NUnit.Framework;
 using SurfLevel.Contracts.Interfaces.Services;
-using SurfLevel.Contracts.Models.ViewModels.Search.DTO;
 using SurfLevel.Domain.Services;
+using SurfLevel.Domain.ViewModels.Search.DTO;
 using System;
 
 namespace SurfLevel.Domain.Test

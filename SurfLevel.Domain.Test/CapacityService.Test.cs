@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using SurfLevel.Contracts.Interfaces.Repositories;
 using SurfLevel.Contracts.Models.DatabaseObjects;
+using SurfLevel.Domain.Extensions;
 using SurfLevel.Domain.Services;
 using SurfLevel.Domain.Test.Common;
 using System;
@@ -27,6 +28,7 @@ namespace SurfLevel.Domain.Test
                     CreateTypicalOrder(DateTime.Now.AddDays(7), DateTime.Now.AddDays(14), 2, 2, OrderStatus.Annulated, 3),
                 }
             );
+            
             var bookings = new BookingsService(bookingRepo.Object);
 
             var service = new CapacityService(_accommodationRepository, bookings);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SurfLevel.Domain.IProviders
+namespace SurfLevel.Domain.Providers.Interfaces
 {
     public interface IPackageProvider
     {

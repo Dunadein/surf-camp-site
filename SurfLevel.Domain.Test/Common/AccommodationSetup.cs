@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using SurfLevel.Contracts.Interfaces.Repositories;
 using SurfLevel.Contracts.Models.DatabaseObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +18,7 @@ namespace SurfLevel.Domain.Test.Common
             var accommodationRepository = new Mock<IAccommodationRepository>();
 
             #region Long-Long-Level-Setup
-            accommodationRepository.Setup(p => p.GetAccommodationsAsync()).ReturnsAsync(
+            accommodationRepository.Setup(p => p.GetAccommodationsAsync(It.IsAny<Func<Villa, bool>>())).ReturnsAsync(
                 new List<Villa>()
                 {
                     new Villa()

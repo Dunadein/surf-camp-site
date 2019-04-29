@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SurfLevel.Contracts.Interfaces.Providers
+namespace SurfLevel.Domain.Providers.Interfaces
 {
     public interface ICalendarProvider
     {

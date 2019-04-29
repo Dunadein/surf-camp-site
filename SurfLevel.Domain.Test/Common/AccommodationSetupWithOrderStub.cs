@@ -17,17 +17,15 @@ namespace SurfLevel.Domain.Test.Common
                 DateTill = till?.Date,
                 GuestsCount = pax,
                 Status = orderStatus,
-                Guests = new List<Guest>
-                (
-                    Enumerable.Range(1, pax).Select(p => new Guest()
-                    {
-                        OrderId = randId,
-                        ServiceDays = till.HasValue ? (till.Value - from).Days + 1 : 5,
-                        PackageId = 1,
-                        AccommodationPriceId = roomId.HasValue ? GetAccommodationPrice(roomId.Value, accommodationType ?? pax).Id : (int?)null,
-                        AccommodationPrice = roomId.HasValue ? GetAccommodationPrice(roomId.Value, accommodationType ?? pax) : null
-                    })
-                )
+                Guests = Enumerable.Range(1, pax).Select(p => new Guest()).ToArray(),
+                Services = new List<Service>(Enumerable.Range(1, pax).Select(p => new Service()
+                {
+                    OrderId = randId,
+                    ServiceDays = till.HasValue ? (till.Value - from).Days + 1 : 5,
+                    PackageId = 1,
+                    AccommodationPriceId = roomId.HasValue ? GetAccommodationPrice(roomId.Value, accommodationType ?? pax).Id : (int?)null,
+                    AccommodationPrice = roomId.HasValue ? GetAccommodationPrice(roomId.Value, accommodationType ?? pax) : null
+                }))
             };
         }
 

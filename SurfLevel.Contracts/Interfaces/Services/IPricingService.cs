@@ -12,8 +12,8 @@ namespace SurfLevel.Contracts.Interfaces.Services
 
         Task<Dictionary<int, List<PaxPrice>>> GetAccommodationPricesAsync(Package package, DateTime from, DateTime till, int pax);
 
-        decimal CalculatePackagePromoPrice(Package package, DateTime from, DateTime? till = null);
+        Task<decimal> CalculatePackageMinPriceAsync(Package package, DateTime? from = null, DateTime? till = null);
 
-        decimal CalculatePackageWithAccommodationPrice(Package package, Room r);
+        Task<Tuple<int?, decimal>> CalculateRequestedPriceAsync(Package package, int? roomId, int servicePax, DateTime from, DateTime? till = null);
     }
 }

@@ -27,8 +27,8 @@ namespace SurfLevel.Domain.Services
             var occupied = bookings.Where(p => !(includeRequested ? p.Status.In(OrderStatus.Annulated) : p.Status.In(OrderStatus.Annulated, OrderStatus.Request)))
                .Select(p => new
                {
-                   Dates = GetDaysRange(p.DateFrom, p.DateTill ?? p.DateFrom.AddDays(p.Guests.Max(g => g.ServiceDays ?? 1) - 1)),
-                   GrouppingByOrder = p.Guests.GroupBy(t => t.AccommodationPrice?.RoomId).Select(g => new 
+                   Dates = GetDaysRange(p.DateFrom, p.DateTill ?? p.DateFrom.AddDays(p.Services.Max(g => g.ServiceDays ?? 1) - 1)),
+                   GrouppingByOrder = p.Services.GroupBy(t => t.AccommodationPrice?.RoomId).Select(g => new 
                    {
                        RoomKey = g.Key,
                        Pax = g.Key.HasValue ? Math.Max(g.Count(), g.Max(t => t.AccommodationPrice.Accommodation.Сapacity)) : g.Count()

@@ -13,5 +13,7 @@ namespace SurfLevel.Repository.DBProviders
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<Guest> Tourists { get; set; }
+
+        public DbSet<Service> Services { get; set; }
     }
 }

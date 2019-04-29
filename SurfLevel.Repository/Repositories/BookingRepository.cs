@@ -14,8 +14,8 @@ namespace SurfLevel.Repository.Repositories
     {
         public static IIncludableQueryable<Order, Accommodation> EndChain(this IQueryable<Order> chain)
         {
-            return chain.Include(p => p.Guests).ThenInclude(p => p.Package)
-                .Include(p => p.Guests).ThenInclude(p => p.AccommodationPrice).ThenInclude(p => p.Accommodation);               
+            return chain.Include(p => p.Guests).Include(p => p.Services).ThenInclude(p => p.Package)
+                .Include(p => p.Services).ThenInclude(p => p.AccommodationPrice).ThenInclude(p => p.Accommodation);               
         }
     }
 
@@ -45,5 +45,14 @@ namespace SurfLevel.Repository.Repositories
                 p.DateTill >= periodStart && (periodEnd.HasValue ? p.DateFrom <= periodEnd.Value : true)
             ).EndChain().AsNoTracking().ToListAsync();
         }        
+
+        public async Task<int> CreateBookingAsync(Order order)
+        {
+            _context.Orders.Add(order);
+
+            await _context.SaveChangesAsync();
+
+            return order.Id;
+        }
     }
 }

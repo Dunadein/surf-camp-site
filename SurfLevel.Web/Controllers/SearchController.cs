@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SurfLevel.Contracts.Models.DTO;
-using SurfLevel.Domain.IProviders;
+using SurfLevel.Domain.Providers.Interfaces;
 using SurfLevel.Domain.ViewModels.Package;
 using SurfLevel.Domain.ViewModels.Search.DTO;
 using System.Collections.Generic;

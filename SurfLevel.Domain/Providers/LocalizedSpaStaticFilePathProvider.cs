@@ -1,13 +1,13 @@
 ﻿using SurfLevel.Contracts.Interfaces.Services;
 
-namespace SurfLevel.Domain
+namespace SurfLevel.Domain.Providers
 {
     public class LocalizedSpaStaticFilePathProvider
     {
-        private readonly IRegionByLangService _userLanguageService;
+        private readonly ILocaleService _userLanguageService;
         private readonly string _distFolder;
 
-        public LocalizedSpaStaticFilePathProvider(IRegionByLangService userLanguageService, string distFolder)
+        public LocalizedSpaStaticFilePathProvider(ILocaleService userLanguageService, string distFolder)
         {
             _userLanguageService = userLanguageService;
             _distFolder = distFolder;

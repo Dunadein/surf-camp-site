@@ -6,13 +6,13 @@ using System.Net.Http.Headers;
 
 namespace SurfLevel.Domain.Services
 {
-    public class RegionByLangService : IRegionByLangService
+    public class LocaleByLangService : ILocaleService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly List<string> _availableLanguages;
         private readonly string _localeCookie;
 
-        public RegionByLangService(IHttpContextAccessor httpContextAccessor
+        public LocaleByLangService(IHttpContextAccessor httpContextAccessor
             , IEnumerable<string> availableLanguages
             , string localeCookieName)
         {

@@ -20,10 +20,8 @@ namespace SurfLevel.Domain.Services
             _bookings = bookingsService;
         }
 
-        public async Task<List<Room>> FindAvailableAccommodation(DateTime periodStart, DateTime periodEnd, int pax)
+        private async Task<List<AccommodationPrice>> GetAvailableVariants(IEnumerable<Room> rooms, DateTime periodStart, DateTime periodEnd)
         {
-            var accommodations = await _accommodations.GetAccommodationsAsync();
-
             var bookings = await _bookings.GetBookingsWithDates(periodStart, periodEnd);
 
             var occupied = bookings.Where(p => p.Date.IsBetween(periodStart, periodEnd)).SelectMany(p => p.Groupping)
@@ -32,16 +30,26 @@ namespace SurfLevel.Domain.Services
                     RoomId = p.Key,
                     Taken = p.Max(group => group.Pax)
                 });
-
-            var rooms = accommodations.Where(p => p.IsEnabled).SelectMany(p => p.Rooms).ToList();
+            
             // доступный номерной фонд
             var prices = rooms.SelectMany(p => p.Prices.Select(t => new
-            {
-                Price = t,
-                MaxPax = p.Prices.Max(m => m.Accommodation.Сapacity)
-            }))
-            .Where(p => !occupied.Any(t => t.RoomId == p.Price.RoomId && p.MaxPax - t.Taken < p.Price.Accommodation.Сapacity))
-            .Select(p => p.Price).ToList();
+                {
+                    Price = t,
+                    MaxPax = p.Prices.Max(m => m.Accommodation.Сapacity)
+                }))
+                .Where(p => !occupied.Any(t => t.RoomId == p.Price.RoomId && p.MaxPax - t.Taken < p.Price.Accommodation.Сapacity))
+                .Select(p => p.Price).ToList();
+
+            return prices;
+        }
+
+        public async Task<List<Room>> FindAvailableAccommodation(DateTime periodStart, DateTime periodEnd, int pax)
+        {
+            var accommodations = await _accommodations.GetAccommodationsAsync(p => p.IsEnabled);
+
+            var rooms = accommodations.SelectMany(p => p.Rooms).ToList();
+
+            var prices = await GetAvailableVariants(rooms, periodStart, periodEnd);
 
             var result = new List<Room>();
 

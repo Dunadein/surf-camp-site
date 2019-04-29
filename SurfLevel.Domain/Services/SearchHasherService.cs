@@ -33,7 +33,7 @@ namespace SurfLevel.Domain.Services
             };
         }
 
-        public string Create(Request request)
+        public string Create<TRequest>(TRequest request) where TRequest : Request
         {
             if (request == null)
                 throw new ArgumentException("Unable to create search hash: expected params, null was given", nameof(request));

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using SurfLevel.Domain.IProviders;
+using SurfLevel.Domain.Providers.Interfaces;
 using SurfLevel.Domain.ViewModels.Package;
 using System.Collections.Generic;
 using System.Threading.Tasks;

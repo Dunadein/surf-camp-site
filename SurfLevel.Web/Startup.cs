@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SurfLevel.Repository.Providers;
+using SurfLevel.Repository.DBProviders;
 using SurfLevel.Web.Infrastructure.Extensions;
 
 namespace SurfLevel.Web
@@ -47,6 +47,9 @@ namespace SurfLevel.Web
                 options.UseMySql(Configuration.GetConnectionString("DBConnection"))
             )
             .AddDbContext<AccommodationContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("DBConnection"))
+            )
+            .AddDbContext<PackageContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("DBConnection"))
             );
         }

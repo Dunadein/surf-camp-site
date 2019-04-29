@@ -2,7 +2,9 @@
 using SurfLevel.Contracts.Interfaces.Repositories;
 using SurfLevel.Contracts.Models.DatabaseObjects;
 using SurfLevel.Repository.DBProviders;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SurfLevel.Repository.Repositories
@@ -16,10 +18,10 @@ namespace SurfLevel.Repository.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Package>> GetAllPackagesAsync()
+        public async Task<List<Package>> GetPackagesAsync(Func<Package, bool> condition = null)
         {
             return await _context.Packages.Include(p => p.OutOfServicePeriods).Include(p => p.PackagePrices)
-                .AsNoTracking().ToListAsync();
+                .AsNoTracking().Where(p => condition != null ? condition(p) : true).ToListAsync();
         }
 
         public async Task<Package> GetPackageByIdAsync(int id)

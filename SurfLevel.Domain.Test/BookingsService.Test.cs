@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SurfLevel.Domain.Test
 {
-    public class BookingServiceTest  : AccommodationSetupWithOrderStub
+    public class BookingsServiceTest  : AccommodationSetupWithOrderStub
     {
         [Test]
         public async Task Assure_All_Rooms_Are_Booked_And_Counting_Correct()

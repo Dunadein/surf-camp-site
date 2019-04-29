@@ -8,6 +8,7 @@ namespace SurfLevel.Contracts.Models.DatabaseObjects
         public Order()
         {
             Guests = new HashSet<Guest>();
+            Services = new HashSet<Service>();
         }
 
         #region Columns
@@ -16,6 +17,8 @@ namespace SurfLevel.Contracts.Models.DatabaseObjects
         public string HashKey { get; set; }
         public string ContactEmail { get; set; }
         public string ContactPhone { get; set; }
+        public string GuestName { get; set; }
+        public string GuestSecondName { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime? DateTill { get; set; }
         public int GuestsCount { get; set; }
@@ -25,6 +28,7 @@ namespace SurfLevel.Contracts.Models.DatabaseObjects
         #endregion
 
         public virtual ICollection<Guest> Guests { get; set; }
+        public virtual ICollection<Service> Services { get; set; }
     }
 
     public enum OrderStatus

@@ -1,13 +1,13 @@
-﻿using SurfLevel.Contracts.Interfaces.Providers;
-using SurfLevel.Contracts.Interfaces.Repositories;
+﻿using SurfLevel.Contracts.Interfaces.Repositories;
 using SurfLevel.Contracts.Interfaces.Services;
+using SurfLevel.Domain.Providers.Interfaces;
 using SurfLevel.Domain.ViewModels.Calendar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SurfLevel.Domain
+namespace SurfLevel.Domain.Providers
 {
     public class CalendarProvider : ICalendarProvider
     {
@@ -23,9 +23,9 @@ namespace SurfLevel.Domain
 
         public async Task<List<CalendarDate>> GetCalendarDates()
         {
-            var accommodations = await _accommodationRepository.GetAccommodationsAsync();
+            var accommodations = await _accommodationRepository.GetAccommodationsAsync(p => p.IsEnabled);
             // максимальная вместимость жилья
-            var maxPax = accommodations.Where(p => p.IsEnabled).SelectMany(p => p.Rooms).Sum(t => 
+            var maxPax = accommodations.SelectMany(p => p.Rooms).Sum(t => 
                 t.Prices.Max(p => p.Accommodation.Сapacity)
             );
 

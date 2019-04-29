@@ -1,6 +1,6 @@
 ﻿namespace SurfLevel.Contracts.Interfaces.Services
 {
-    public interface IRegionByLangService
+    public interface ILocaleService
     {
         string GetUserLocale();
     }
