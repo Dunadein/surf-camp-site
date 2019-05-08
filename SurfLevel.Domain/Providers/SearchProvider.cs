@@ -5,11 +5,11 @@ using SurfLevel.Contracts.Models.DTO;
 using SurfLevel.Domain.Providers.Interfaces;
 using SurfLevel.Domain.ViewModels.Package;
 using SurfLevel.Domain.ViewModels.Search;
-using SurfLevel.Domain.ViewModels.Search.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static SurfLevel.Domain.Fetching.PrimaryKeyStrategy;
 
 namespace SurfLevel.Domain.Providers
 {
@@ -17,13 +17,13 @@ namespace SurfLevel.Domain.Providers
     {
         private readonly IPackageRepository _packageRepository;
         private readonly IAccommodationRepository _accommodationRepository;
-        private readonly ISearchHasherService _hasher;
+        private readonly IHasherService<SearchRequest> _hasher;
         private readonly ILocaleService _locale;
         private readonly IPricingService _pricing;
 
         public SearchProvider(IPackageRepository packageRepository,
             IAccommodationRepository accommodationRepository,
-            ISearchHasherService hasherService,
+            IHasherService<SearchRequest> hasherService,
             ILocaleService localeService,
             IPricingService pricingService)
         {
@@ -48,7 +48,7 @@ namespace SurfLevel.Domain.Providers
                 };
             }
 
-            var request = _hasher.Read<SearchRequest>(hash);
+            var request = _hasher.Read(hash);
             request.Validate();
 
             return request;
@@ -56,7 +56,7 @@ namespace SurfLevel.Domain.Providers
 
         private async Task<List<Package>> GetPackagesByRequest(SearchRequest request)
         {
-            var packages = await _packageRepository.GetPackagesAsync(p => p.IsWithAccommodation == request.WithAccommodation
+            var packages = await _packageRepository.GetPackagesByConditionAsync(p => p.IsWithAccommodation == request.WithAccommodation
                 && !p.OutOfServicePeriods.Any(t => t.Start <= request.From && t.End >= request.Till));
 
             return packages;
@@ -64,7 +64,7 @@ namespace SurfLevel.Domain.Providers
 
         private async Task<Package> GetPackageById(SearchRequest request, int packageId)
         {
-            var package = await _packageRepository.GetPackageByIdAsync(packageId);
+            var package = await _packageRepository.GetPackageByConditionAsync(GetById<Package>(packageId));
 
             if (package == null)
                 throw new ArgumentNullException("The package not found.");

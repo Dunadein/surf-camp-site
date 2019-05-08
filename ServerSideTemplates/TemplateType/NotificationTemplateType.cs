@@ -4,6 +4,7 @@
     {
         NewOrderCreated,
         AdminNewOrder,
-        Footage
+        Footage,
+        OrderPayed
     }
 }

@@ -25,13 +25,13 @@ namespace SurfLevel.Repository.Repositories
                 .Where(p => condition != null ? condition(p) : true).ToListAsync();
         }
 
-        public async Task<Room> GetRoomByIdAsync(int roomId)
+        public async Task<Room> GetRoomByConditionAsync(Func<Room, bool> condition)
         {
             return await _context.Rooms.Include(p => p.Prices).ThenInclude(p => p.Accommodation)
-                .FirstOrDefaultAsync(p => p.Id == roomId);
+                .FirstOrDefaultAsync(p => condition(p));
         }
 
-        public async Task<AccommodationPrice> GetPriceByCondition(Func<AccommodationPrice, bool> condition)
+        public async Task<AccommodationPrice> GetPriceByConditionAsync(Func<AccommodationPrice, bool> condition)
         {
             return await _context.AccommodationPrices.Include(p => p.Accommodation)
                 .FirstOrDefaultAsync(p => condition(p));

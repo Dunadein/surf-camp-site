@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SurfLevel.Contracts.Models.DatabaseObjects
 {
-    public class Order
+    public class Order : IPrimaryKeyObject
     {
         public Order()
         {
@@ -25,6 +25,8 @@ namespace SurfLevel.Contracts.Models.DatabaseObjects
         public decimal TotalPrice { get; set; }
         public OrderStatus Status { get; set; }
         public string Comment { get; set; }
+        public string Locale { get; set; }
+        public decimal? Payed { get; set; }
         #endregion
 
         public virtual ICollection<Guest> Guests { get; set; }

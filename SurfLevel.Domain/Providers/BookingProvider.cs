@@ -8,11 +8,12 @@ using SurfLevel.Domain.Events;
 using SurfLevel.Domain.Options;
 using SurfLevel.Domain.Providers.Interfaces;
 using SurfLevel.Domain.ViewModels.Booking;
-using SurfLevel.Domain.ViewModels.Search.DTO;
+using SurfLevel.Domain.ViewModels.Search;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static SurfLevel.Domain.Fetching.PrimaryKeyStrategy;
 
 namespace SurfLevel.Domain.Providers
 {
@@ -20,24 +21,24 @@ namespace SurfLevel.Domain.Providers
     {
         private readonly IBookingRepository _booking;
         private readonly IPackageRepository _packages;
-        private readonly ISearchHasherService _searchHasher;
+        private readonly IHasherService<SearchRequest> _searchHasher;
         private readonly IPricingService _pricing;
-        private readonly IOrderHasherService _orderHasher;
+        private readonly IHasherService<string> _orderHasher;
         private readonly IMediator _bus;
         private readonly ILocaleService _localeService;
-        private readonly ComissionLocales _comissionLocales;
+        private readonly CommissionLocales _comissionLocales;
 
         public BookingProvider(IBookingRepository bookingRepository,
             IPackageRepository packageRepository,
-            ISearchHasherService hasherService,
+            IHasherService<SearchRequest> searchHasher,
             IPricingService pricingService,
-            IOrderHasherService orderHasher,
+            IHasherService<string> orderHasher,
             IMediator mediator,
             ILocaleService localeService,
-            IOptions<ComissionLocales> options)
+            IOptions<CommissionLocales> options)
         {
             _packages = packageRepository;
-            _searchHasher = hasherService;
+            _searchHasher = searchHasher;
             _pricing = pricingService;
             _booking = bookingRepository;
             _orderHasher = orderHasher;
@@ -51,7 +52,7 @@ namespace SurfLevel.Domain.Providers
             if (string.IsNullOrEmpty(hash))
                 throw new ArgumentNullException("Searching parameters wasn't supplied.");
 
-            var request = _searchHasher.Read<SearchRequest>(hash);
+            var request = _searchHasher.Read(hash);
 
             var group = services.GroupBy(p => p.PackageId);
 
@@ -62,7 +63,7 @@ namespace SurfLevel.Domain.Providers
 
         private async Task<decimal> CalculatePackagePrice(Request request, int packageId, IEnumerable<PickedService> service)
         {
-            var package = await _packages.GetPackageByIdAsync(packageId);
+            var package = await _packages.GetPackageByConditionAsync(GetById<Package>(packageId));
 
             if (package == null)
                 throw new ArgumentNullException("The chosen package doesn't found");
@@ -85,7 +86,7 @@ namespace SurfLevel.Domain.Providers
 
             var commission = _comissionLocales.List.Contains(locale);
 
-            var packages = await _packages.GetPackagesAsync(p =>
+            var packages = await _packages.GetPackagesByConditionAsync(p =>
                 bookingForm.Services.Select(s => s.PackageId).Distinct().Contains(p.Id));
 
             var order = new Order()
@@ -101,6 +102,7 @@ namespace SurfLevel.Domain.Providers
                 ContactPhone = bookingForm.Phone,
                 GuestName = bookingForm.Name,
                 GuestSecondName = bookingForm.SecondName,
+                Locale = locale,
                 Guests = Enumerable.Range(1, bookingForm.Pax).Select(p => new Guest()).ToArray()
             };
 
@@ -129,7 +131,7 @@ namespace SurfLevel.Domain.Providers
 
             await _bus.Publish(new CreatedOrder { Order = order });
 
-            return _orderHasher.CreateOrderHash(order.HashKey);
+            return _orderHasher.Create(order.HashKey);
         }
     }   
 }

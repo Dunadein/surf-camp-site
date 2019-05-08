@@ -8,8 +8,7 @@ namespace ServerSideTemplates
     public class TemplateService : ITemplateService
     {
         public TemplateService()
-        {
-        
+        {        
         }
 
         public async Task<string> GetTemplate(string locale, NotificationTemplateType templateType)
@@ -24,7 +23,6 @@ namespace ServerSideTemplates
 
                     return template;
                 }
-
             }
 
             return null;

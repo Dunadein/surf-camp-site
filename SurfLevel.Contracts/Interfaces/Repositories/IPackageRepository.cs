@@ -7,8 +7,8 @@ namespace SurfLevel.Contracts.Interfaces.Repositories
 {
     public interface IPackageRepository
     {
-        Task<List<Package>> GetPackagesAsync(Func<Package, bool> condition = null);
+        Task<List<Package>> GetPackagesByConditionAsync(Func<Package, bool> condition = null);
 
-        Task<Package> GetPackageByIdAsync(int id);
+        Task<Package> GetPackageByConditionAsync(Func<Package, bool> condition);
     }
 }

@@ -9,8 +9,8 @@ namespace SurfLevel.Contracts.Interfaces.Repositories
     {
         Task<List<Villa>> GetAccommodationsAsync(Func<Villa, bool> condition = null);
 
-        Task<Room> GetRoomByIdAsync(int roomId);
+        Task<Room> GetRoomByConditionAsync(Func<Room, bool> condition);
 
-        Task<AccommodationPrice> GetPriceByCondition(Func<AccommodationPrice, bool> condition);
+        Task<AccommodationPrice> GetPriceByConditionAsync(Func<AccommodationPrice, bool> condition);
     }
 }

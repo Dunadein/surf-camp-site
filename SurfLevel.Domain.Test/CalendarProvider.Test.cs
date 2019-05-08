@@ -21,7 +21,7 @@ namespace SurfLevel.Domain.Test
             var bookingRepository = new Mock<IBookingRepository>();
 
             // сетапим на пиковую загрузку в 6 мест в один из дней (через неделю от теста)
-            bookingRepository.Setup(p => p.GetBookingsInPeriodAsync(It.IsAny<DateTime>(), It.IsAny<DateTime?>())).ReturnsAsync(
+            bookingRepository.Setup(p => p.GetBookingsByConditionAsync(It.IsAny<Func<Order, bool>>())).ReturnsAsync(
                 new List<Order>()
                 {
                     CreateTypicalOrder(DateTime.Now.AddDays(5), DateTime.Now.AddDays(12), 2, 1, OrderStatus.Confirmed),

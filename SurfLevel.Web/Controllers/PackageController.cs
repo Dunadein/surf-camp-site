@@ -19,8 +19,6 @@ namespace SurfLevel.Web.Controllers
 
         [HttpGet("get-packages")]
         public async Task<IEnumerable<ViewPackage>> GetPackages()
-        {
-            return await _packageProvider.GetPackageListAsync();
-        }
+            => await _packageProvider.GetPackageListAsync();
     }
 }

@@ -15,36 +15,30 @@ namespace SurfLevel.Repository.Repositories
         public static IIncludableQueryable<Order, Accommodation> EndChain(this IQueryable<Order> chain)
         {
             return chain.Include(p => p.Guests).Include(p => p.Services).ThenInclude(p => p.Package)
-                .Include(p => p.Services).ThenInclude(p => p.AccommodationPrice).ThenInclude(p => p.Accommodation);               
+                .Include(p => p.Services).ThenInclude(p => p.AccommodationPrice).ThenInclude(p => p.Accommodation);
         }
     }
 
     public class BookingRepository : IBookingRepository
     {
         private readonly BookingContext _context;
-        private readonly IAccommodationRepository _accomodation;
-        private readonly IPackageRepository _package;
 
-        public BookingRepository(BookingContext context, IAccommodationRepository accomodationRepository, IPackageRepository packageRepository)
+        public BookingRepository(BookingContext context)
         {
             _context = context;
-            _accomodation = accomodationRepository;
-            _package = packageRepository;
         }
 
-        public async Task<List<Order>> GetBookingsAsync(DateTime? startFrom = null)
+        public async Task<List<Order>> GetBookingsByConditionAsync(Func<Order, bool> condition = null)
         {
-            return await _context.Orders.Where(p =>
-                startFrom.HasValue ? p.DateFrom >= startFrom.Value : true
-            ).EndChain().AsNoTracking().ToListAsync();
+            return await _context.Orders.Where(p => condition != null ? condition(p) : true)
+                .EndChain().AsNoTracking().ToListAsync();
         }
 
-        public async Task<List<Order>> GetBookingsInPeriodAsync(DateTime periodStart, DateTime? periodEnd = null)
+        public async Task<Order> GetBookingByConditionAsync(Func<Order, bool> condition)
         {
-            return await _context.Orders.Where(p =>
-                p.DateTill >= periodStart && (periodEnd.HasValue ? p.DateFrom <= periodEnd.Value : true)
-            ).EndChain().AsNoTracking().ToListAsync();
-        }        
+            return await _context.Orders.EndChain().AsNoTracking()
+                .FirstOrDefaultAsync(p => condition(p));
+        }
 
         public async Task<int> CreateBookingAsync(Order order)
         {
@@ -53,6 +47,25 @@ namespace SurfLevel.Repository.Repositories
             await _context.SaveChangesAsync();
 
             return order.Id;
+        }
+
+        public async Task UpdateTouristAsync(int id, string name, string secondName)
+        {
+            var row = await _context.Tourists.FindAsync(id);
+
+            row.Name = name;
+            row.LastName = secondName;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateOrderAsync(int id, Action<Order> action)
+        {
+            var order = await _context.Orders.FindAsync(id);
+
+            action(order);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

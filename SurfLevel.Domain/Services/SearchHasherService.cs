@@ -1,7 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using SurfLevel.Contracts.Interfaces.Services;
-using SurfLevel.Contracts.Models.DTO;
+using SurfLevel.Domain.ViewModels.Search;
 using System;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace SurfLevel.Domain.Services
 {
-    public class SearchHasherService : ISearchHasherService
+    public class SearchHasherService : IHasherService<SearchRequest>
     {
         private readonly JsonSerializerSettings _settings;
         
@@ -33,7 +33,7 @@ namespace SurfLevel.Domain.Services
             };
         }
 
-        public string Create<TRequest>(TRequest request) where TRequest : Request
+        public string Create(SearchRequest request)
         {
             if (request == null)
                 throw new ArgumentException("Unable to create search hash: expected params, null was given", nameof(request));
@@ -53,7 +53,7 @@ namespace SurfLevel.Domain.Services
             return Base64UrlEncoder.Encode(bytes);
         }
 
-        public TRequest Read<TRequest>(string hash) where TRequest : Request, new()
+        public SearchRequest Read(string hash)
         {
             if (string.IsNullOrWhiteSpace(hash))
                 throw new ArgumentException("Unable to read search hash. The argument was not defined.", nameof(hash));
@@ -73,7 +73,7 @@ namespace SurfLevel.Domain.Services
                 throw new ArgumentException("Unable to read search hash. Hash format is unknown.", nameof(hash), ex);
             }
 
-            return new TRequest()
+            return new SearchRequest()
             {
                 From = req.DateFrom,
                 Till = req.DateTill,

@@ -1,6 +1,6 @@
 ﻿namespace SurfLevel.Contracts.Models.DatabaseObjects
 {
-    public class Accommodation
+    public class Accommodation : IPrimaryKeyObject
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -12,11 +12,11 @@ namespace SurfLevel.Domain.Handlers
 {
     public class AdminOrderCreatedHandler : INotificationHandler<CreatedOrder>
     {
-        private readonly INotificator<AdminNotification> _notificator;
+        private readonly INotificator<AdminNewOrderNotification> _notificator;
         private readonly SystemEmails _emailOptions;
 
         public AdminOrderCreatedHandler(IOptions<SystemEmails> options,
-            INotificator<AdminNotification> notificator)
+            INotificator<AdminNewOrderNotification> notificator)
         {
             _notificator = notificator;
             _emailOptions = options.Value;
@@ -24,7 +24,7 @@ namespace SurfLevel.Domain.Handlers
 
         public async Task Handle(CreatedOrder booking, CancellationToken cancellationToken)
         {
-            var notification = new AdminNotification()
+            var notification = new AdminNewOrderNotification()
             {
                 Order = booking.Order,
                 Recipient = _emailOptions.AdminEmails

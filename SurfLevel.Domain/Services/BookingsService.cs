@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static SurfLevel.Domain.Fetching.FetchStrategy;
 
 namespace SurfLevel.Domain.Services
 {
@@ -21,7 +22,7 @@ namespace SurfLevel.Domain.Services
 
         public async Task<List<DateWithGroupingByRoom>> GetBookingsWithDates(DateTime periodStart, DateTime? periodEnd = null, bool includeRequested = false)
         {
-            var bookings = await _bookings.GetBookingsInPeriodAsync(periodStart, periodEnd);
+            var bookings = await _bookings.GetBookingsByConditionAsync(InPeriod(periodStart, periodEnd));
             // что занято уже
             // иногда нужно получать только реально занимающие слоты, иногда все брони
             var occupied = bookings.Where(p => !(includeRequested ? p.Status.In(OrderStatus.Annulated) : p.Status.In(OrderStatus.Annulated, OrderStatus.Request)))

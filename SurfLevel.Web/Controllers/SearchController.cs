@@ -2,7 +2,7 @@
 using SurfLevel.Contracts.Models.DTO;
 using SurfLevel.Domain.Providers.Interfaces;
 using SurfLevel.Domain.ViewModels.Package;
-using SurfLevel.Domain.ViewModels.Search.DTO;
+using SurfLevel.Domain.ViewModels.Search;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

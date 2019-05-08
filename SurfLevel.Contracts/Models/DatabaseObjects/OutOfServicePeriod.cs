@@ -2,7 +2,7 @@
 
 namespace SurfLevel.Contracts.Models.DatabaseObjects
 {
-    public class OutOfServicePeriod
+    public class OutOfServicePeriod : IPrimaryKeyObject
     {
         public int Id { get; set; }
         public int PackageId { get; set; }

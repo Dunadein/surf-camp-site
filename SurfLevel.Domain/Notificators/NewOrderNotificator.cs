@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SurfLevel.Domain.Notificators
 {
-    public class NewOrderNotificator : Notificator<ClientNotification>
+    public class NewOrderNotificator : Notificator<ClientNewOrderNotification>
     {
         private readonly IMailNotification _mailer;
         private readonly ITemplateService _templates;
@@ -19,22 +19,22 @@ namespace SurfLevel.Domain.Notificators
             _templates = templateService;
         }
 
-        public override async Task SendNotificationAsync(ClientNotification notification)
+        public override async Task SendNotificationAsync(ClientNewOrderNotification notification)
         {
-            var bodyTemplate = await _templates.GetTemplate(notification.Locale, NotificationTemplateType.NewOrderCreated);
+            var bodyTemplate = await _templates.GetTemplate(notification.Order.Locale, NotificationTemplateType.NewOrderCreated);
 
             var id = notification.Order.GenerateName();
             var replacement = new Dictionary<string, string>
             {
-               [nameof(id)] = id,
-               [nameof(notification.Order.DateFrom)] = notification.Order.DateFrom.ToShortDateString()
+               ["{id}"] = id,
+               ["{dateFrom}"] = notification.Order.DateFrom.ToShortDateString()
             };
 
             var body = PrepareBody(bodyTemplate, replacement);
 
-            var footer = await _templates.GetTemplate(notification.Locale, NotificationTemplateType.Footage);
+            var footer = await _templates.GetTemplate(notification.Order.Locale, NotificationTemplateType.Footage);
 
-            var subject = string.Concat(notification.Locale == "ru" ? "Заказ" : "Order", $" № {id}");
+            var subject = string.Concat(notification.Order.Locale == "ru" ? "Бронь" : "Order", $" № {id}");
 
             await _mailer.SendMailAsync(notification.Recipient, subject, string.Concat(body, footer), notification.HiddenCopyTo);
         }

@@ -2,7 +2,7 @@
 
 namespace SurfLevel.Contracts.Models.DatabaseObjects
 {
-    public class Room
+    public class Room : IPrimaryKeyObject
     {
         public Room()
         {

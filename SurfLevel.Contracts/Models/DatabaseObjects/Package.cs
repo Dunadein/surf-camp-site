@@ -2,7 +2,7 @@
 
 namespace SurfLevel.Contracts.Models.DatabaseObjects
 {
-    public class Package
+    public class Package : IPrimaryKeyObject
     {
         public Package()
         {

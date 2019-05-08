@@ -2,14 +2,14 @@
 using NUnit.Framework;
 using SurfLevel.Contracts.Interfaces.Services;
 using SurfLevel.Domain.Services;
-using SurfLevel.Domain.ViewModels.Search.DTO;
+using SurfLevel.Domain.ViewModels.Search;
 using System;
 
 namespace SurfLevel.Domain.Test
 {
     public class SeachHasherServiceTest
     {
-        private ISearchHasherService _hasher;
+        private IHasherService<SearchRequest> _hasher;
 
         [SetUp]
         public void Setup()
@@ -45,7 +45,7 @@ namespace SurfLevel.Domain.Test
 
             //deserialize
             SearchRequest serialized = null;
-            Assert.DoesNotThrow(() => serialized = _hasher.Read<SearchRequest>(hash));
+            Assert.DoesNotThrow(() => serialized = _hasher.Read(hash));
             Assert.NotNull(serialized);
 
             // проверяем что значения полей объектов идентичны

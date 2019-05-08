@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static SurfLevel.Domain.Fetching.PrimaryKeyStrategy;
 
 namespace SurfLevel.Domain.Services
 {
@@ -47,7 +48,7 @@ namespace SurfLevel.Domain.Services
             if (!roomId.HasValue)
                 throw new ArgumentException($"The package {package.Name} is with Accommodation, but it wasn't supplied.");
 
-            var room = await _accommodation.GetRoomByIdAsync(roomId.Value);
+            var room = await _accommodation.GetRoomByConditionAsync(GetById<Room>(roomId.Value));
 
             var roomPrice = room?.Prices.FirstOrDefault(p => p.Accommodation.Сapacity == servicePax);
 

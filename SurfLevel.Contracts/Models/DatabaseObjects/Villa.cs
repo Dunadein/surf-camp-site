@@ -2,7 +2,7 @@
 
 namespace SurfLevel.Contracts.Models.DatabaseObjects
 {
-    public class Villa
+    public class Villa : IPrimaryKeyObject
     {
         public Villa()
         {

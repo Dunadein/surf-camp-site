@@ -1,6 +1,6 @@
 ﻿namespace SurfLevel.Contracts.Models.DatabaseObjects
 {
-    public class PackagePeriodPrice
+    public class PackagePeriodPrice : IPrimaryKeyObject
     {
         #region Columns
         public int Id { get; set; }
@@ -9,7 +9,5 @@
         public int? PeriodEnd { get; set; }
         public decimal Price { get; set; }
         #endregion
-
-        //public virtual Package Package { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace SurfLevel.Contracts.Models.Notificators
 {
-    public class AdminNotification : Notification
+    public class ClientOrderPayedNotification : Notification
     {
         public Order Order { get; set; }
     }

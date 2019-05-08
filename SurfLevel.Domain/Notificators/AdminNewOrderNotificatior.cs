@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace SurfLevel.Domain.Notificators
 {
-    public class AdminNewOrderNotification : Notificator<AdminNotification>
+    public class AdminNewOrderNotificatior : Notificator<AdminNewOrderNotification>
     {
         private readonly IMailNotification _mailer;
         private readonly ITemplateService _templates;
 
-        public AdminNewOrderNotification(IMailNotification mailNotification, ITemplateService templateService)
+        public AdminNewOrderNotificatior(IMailNotification mailNotification, ITemplateService templateService)
         {
             _mailer = mailNotification;
             _templates = templateService;
         }
 
-        public override async Task SendNotificationAsync(AdminNotification notification)
+        public override async Task SendNotificationAsync(AdminNewOrderNotification notification)
         {
             var bodyTemplate = await _templates.GetTemplate("admin", NotificationTemplateType.AdminNewOrder);
 

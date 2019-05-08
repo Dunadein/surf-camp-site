@@ -7,5 +7,7 @@ namespace SurfLevel.Domain.Options
         public string SystemEmail { get; set; }
 
         public IEnumerable<string> AdminEmails { get; set; }
+
+        public string PaymentHandleEmail { get; set; }
     }
 }

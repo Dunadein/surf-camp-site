@@ -1,7 +1,7 @@
 ﻿using SurfLevel.Contracts.Models.DTO;
 using System.Collections.Generic;
 
-namespace SurfLevel.Domain.ViewModels.Search.DTO
+namespace SurfLevel.Domain.ViewModels.Search
 {
     public class SearchByDefaultResult
     {

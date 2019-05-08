@@ -1,6 +1,6 @@
 ﻿namespace SurfLevel.Contracts.Models.DatabaseObjects
 {
-    public class Service
+    public class Service : IPrimaryKeyObject
     {
         public int Id { get; set; }
         public int OrderId { get; set; }

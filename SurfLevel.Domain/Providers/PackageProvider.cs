@@ -26,7 +26,7 @@ namespace SurfLevel.Domain.Providers
 
         public async Task<List<ViewPackage>> GetPackageListAsync()
         {
-            var packages = await _repository.GetPackagesAsync();
+            var packages = await _repository.GetPackagesByConditionAsync();
 
             var currentLocale = _langService.GetUserLocale();
 

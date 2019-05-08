@@ -14,7 +14,7 @@ using System.Web;
 
 namespace SurfLevel.Domain.Services
 {
-    public class OrderHasherService : IOrderHasherService
+    public class OrderHasherService : IHasherService<string>
     {
         private readonly string _secretKey;
 
@@ -29,7 +29,7 @@ namespace SurfLevel.Domain.Services
             _secretKey = secretKey?.Value.SecretKey;
         }
 
-        public string CreateOrderHash(string hashKey)
+        public string Create(string hashKey)
         {
             if (string.IsNullOrWhiteSpace(hashKey))
                 throw new ArgumentNullException($"The given {nameof(hashKey)} is empty.");
@@ -55,7 +55,7 @@ namespace SurfLevel.Domain.Services
             }
         }
 
-        public string ReadOrderHash(string hashedOrder, bool supportInherited = true)
+        public string Read(string hashedOrder)
         {
             try
             {
@@ -80,7 +80,7 @@ namespace SurfLevel.Domain.Services
                 }
                 catch
                 {
-                    if (supportInherited && !string.IsNullOrEmpty(_secretKey))
+                    if (!string.IsNullOrEmpty(_secretKey))
                         return DecryptInheritedFormatHash(plainHash);
 
                     return null;

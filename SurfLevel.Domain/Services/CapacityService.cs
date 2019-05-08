@@ -22,7 +22,7 @@ namespace SurfLevel.Domain.Services
 
         private async Task<List<AccommodationPrice>> GetAvailableVariants(IEnumerable<Room> rooms, DateTime periodStart, DateTime periodEnd)
         {
-            var bookings = await _bookings.GetBookingsWithDates(periodStart, periodEnd);
+            var bookings = await _bookings.GetBookingsWithDates(periodStart, periodEnd, false);
 
             var occupied = bookings.Where(p => p.Date.IsBetween(periodStart, periodEnd)).SelectMany(p => p.Groupping)
                 .GroupBy(p => p.RoomKey).Where(p => p.Key.HasValue).Select(p => new

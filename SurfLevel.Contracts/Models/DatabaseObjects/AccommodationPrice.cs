@@ -1,6 +1,6 @@
 ﻿namespace SurfLevel.Contracts.Models.DatabaseObjects
 {
-    public class AccommodationPrice
+    public class AccommodationPrice : IPrimaryKeyObject
     {
         #region Columns
         public int Id { get; set; }

@@ -18,7 +18,7 @@ namespace SurfLevel.Domain.Test
         {
             var bookingRepo = new Mock<IBookingRepository>();
             // все занято
-            bookingRepo.Setup(p => p.GetBookingsInPeriodAsync(It.IsAny<DateTime>(), It.IsAny<DateTime?>())).ReturnsAsync(
+            bookingRepo.Setup(p => p.GetBookingsByConditionAsync(It.IsAny<Func<Order, bool>>())).ReturnsAsync(
                 new List<Order>()
                 {
                     CreateTypicalOrder(DateTime.Now.AddDays(5), DateTime.Now.AddDays(12), 2, 1, OrderStatus.Confirmed),
@@ -54,7 +54,7 @@ namespace SurfLevel.Domain.Test
         {
             var bookingRepo = new Mock<IBookingRepository>();
             // все занято и запрос на овербукинг
-            bookingRepo.Setup(p => p.GetBookingsInPeriodAsync(It.IsAny<DateTime>(), It.IsAny<DateTime?>())).ReturnsAsync(
+            bookingRepo.Setup(p => p.GetBookingsByConditionAsync(It.IsAny<Func<Order, bool>>())).ReturnsAsync(
                 new List<Order>()
                 {
                     CreateTypicalOrder(DateTime.Now.AddDays(5), DateTime.Now.AddDays(12), 2, 1, OrderStatus.Confirmed),
