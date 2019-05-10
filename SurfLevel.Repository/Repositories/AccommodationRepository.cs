@@ -31,10 +31,15 @@ namespace SurfLevel.Repository.Repositories
                 .FirstOrDefaultAsync(p => condition(p));
         }
 
-        public async Task<AccommodationPrice> GetPriceByConditionAsync(Func<AccommodationPrice, bool> condition)
+        public async Task<AccommodationPrice> GetPriceByConditionAsync(Func<AccommodationPrice, bool> condition,
+            Func<IQueryable<AccommodationPrice>, IOrderedQueryable<AccommodationPrice>> sorter = null)
         {
-            return await _context.AccommodationPrices.Include(p => p.Accommodation)
-                .FirstOrDefaultAsync(p => condition(p));
+            var query = _context.AccommodationPrices.Include(p => p.Accommodation);
+
+            if (sorter == null)
+                return await query.FirstOrDefaultAsync(p => condition(p));
+
+            return await sorter(query).FirstOrDefaultAsync(p => condition(p));
         }
     }
 }

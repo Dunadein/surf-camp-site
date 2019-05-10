@@ -13,7 +13,8 @@ namespace SurfLevel.Domain.Services
 {
     public class PricingService : IPricingService
     {
-        private const int DefaultMaxPeriod = 28;
+        private const int DEFAULT_MAX_PERIOD = 28;
+        private const int MAX_SERVICE_PERIOD = 9;
         private const int PromoDays = 7;
 
         private readonly ICapacityService _capacity;
@@ -34,7 +35,11 @@ namespace SurfLevel.Domain.Services
             if (!package.IsWithAccommodation)
                 return package.MinDayPrice;
 
-            return await Task.Run(() => CalculatePrice(package, GetDuration(from, till)));
+            var chipest = await _accommodation.GetPriceByConditionAsync(
+                p => true, p => p.OrderBy(t => t.DayPrice)
+            );
+
+            return await Task.Run(() => CalculatePrice(package, GetDuration(from, till), 1, chipest.DayPrice));
         }
 
         public async Task<Tuple<int?, decimal>> CalculateRequestedPriceAsync(Package package, int? roomId, int servicePax, DateTime from, DateTime? till = null)
@@ -43,19 +48,19 @@ namespace SurfLevel.Domain.Services
                 throw new ArgumentNullException("Package not found");
 
             if (!package.IsWithAccommodation)
-                return new Tuple<int?, decimal>(null, CalculatePrice(package, servicePax));
+                return new Tuple<int?, decimal>(null, CalculatePrice(package, servicePax, 1));
 
             if (!roomId.HasValue)
                 throw new ArgumentException($"The package {package.Name} is with Accommodation, but it wasn't supplied.");
 
             var room = await _accommodation.GetRoomByConditionAsync(GetById<Room>(roomId.Value));
 
-            var roomPrice = room?.Prices.FirstOrDefault(p => p.Accommodation.Сapacity == servicePax);
+            var roomPrice = room?.Prices.FirstOrDefault(p => p.Accommodation.Capacity == servicePax);
 
             if (roomPrice == null)
                 throw new ArgumentNullException("Can't find requested room price.");
 
-            return new Tuple<int?, decimal>(roomPrice.Id, CalculatePrice(package, GetDuration(from, till), roomPrice.DayPrice));
+            return new Tuple<int?, decimal>(roomPrice.Id, CalculatePrice(package, GetDuration(from, till), servicePax, roomPrice.DayPrice));
         }
 
         public async Task<List<PaxPrice>> GetServicePricesAsync(Package package)
@@ -70,12 +75,12 @@ namespace SurfLevel.Domain.Services
                 throw new ArgumentException($"There is no actual price for the package {package.Name}");
 
             // строим период цен
-            var range = Enumerable.Range(Math.Min(package.PackagePrices.Min(p => p.PeriodStart), 1), package.PackagePrices.Max(p => p.PeriodEnd ?? DefaultMaxPeriod));
+            var range = Enumerable.Range(Math.Min(package.PackagePrices.Min(p => p.PeriodFrom), 1), package.PackagePrices.Max(p => p.PeriodTill ?? MAX_SERVICE_PERIOD));
             
             return await Task.Run(() => range.Select(p => new PaxPrice()
             {
                 Pax = p,
-                Price = CalculatePrice(package, p)
+                Price = CalculatePrice(package, p, 1)
             }).ToList());
         }
 
@@ -95,31 +100,41 @@ namespace SurfLevel.Domain.Services
                 p => p.Id,
                 p => p.Prices.Select(t => new PaxPrice()
                 {
-                    Pax = t.Accommodation.Сapacity,
-                    Price = CalculatePrice(package, duration, t.DayPrice)
+                    Pax = t.Accommodation.Capacity,
+                    Price = CalculatePrice(package, duration, t.Accommodation.Capacity, t.DayPrice)
                 }).ToList()
             );
         }
 
-        private decimal CalculatePrice(Package package, int duration, decimal? accommodationPrice = null)
+        private decimal CalculatePrice(Package package, int duration, int pax, decimal? accommodationPrice = null)
         {
-            var price = package.PackagePrices.OrderBy(p => p.PeriodStart)
-                .FirstOrDefault(p => duration.IsBetween(p.PeriodStart, p.PeriodEnd ?? DefaultMaxPeriod))?.Price;
+            var price = package.PackagePrices.OrderBy(p => p.PeriodFrom)
+                .FirstOrDefault(p => duration.IsBetween(p.PeriodFrom, p.PeriodTill ?? DEFAULT_MAX_PERIOD))?.Price;
 
             if (price.HasValue)
-                return price.Value + (accommodationPrice ?? 0) * duration;
+            {
+                if (!package.IsWithAccommodation)
+                    return CaclPromoPrice(price.Value, pax, duration);
+
+                return price.Value * pax + CaclPromoPrice(package.MinDayPrice, pax, duration, accommodationPrice);
+            }
 
             // если в периоде была дыра, будем давать ближайшие снизу (с более короткого периода) цены
             if (!package.IsWithAccommodation)
             {
-                var lastTry = package.PackagePrices.OrderByDescending(p => p.PeriodStart)
-                    .FirstOrDefault(p => (p.PeriodEnd ?? DefaultMaxPeriod) < duration)?.Price;
+                var lastTry = package.PackagePrices.OrderByDescending(p => p.PeriodFrom)
+                    .FirstOrDefault(p => (p.PeriodTill ?? MAX_SERVICE_PERIOD) < duration)?.Price;
 
                 if (lastTry.HasValue)
-                    return lastTry.Value;
+                    return CaclPromoPrice(lastTry.Value, pax, duration);
             }
 
-            return (package.MinDayPrice + (accommodationPrice ?? 0)) * duration;
+            return CaclPromoPrice(package.MinDayPrice, pax, duration, accommodationPrice);
+        }
+
+        private decimal CaclPromoPrice(decimal packagePrice, int pax, int duration, decimal? accommodationPrice = null)
+        {
+            return (pax * packagePrice + (accommodationPrice ?? 0)) * duration;
         }
 
         private int GetDuration(DateTime? from = null, DateTime? till = null)
