@@ -95,7 +95,7 @@ namespace SurfLevel.Domain.Test
             Assert.AreEqual(2, result.SelectMany(p => p.Prices).Count());
 
             // максимально на одного человека
-            Assert.AreEqual(1, result.SelectMany(p => p.Prices).Max(p => p.Accommodation.Сapacity));
+            Assert.AreEqual(1, result.SelectMany(p => p.Prices).Max(p => p.Accommodation.Capacity));
         }
 
         [Test]
@@ -130,7 +130,7 @@ namespace SurfLevel.Domain.Test
             Assert.AreEqual(3, result.SelectMany(p => p.Prices).Count());
 
             // максимально на одного человека
-            Assert.AreEqual(1, result.SelectMany(p => p.Prices).Max(p => p.Accommodation.Сapacity));
+            Assert.AreEqual(1, result.SelectMany(p => p.Prices).Max(p => p.Accommodation.Capacity));
         }
 
         [Test]
@@ -162,7 +162,7 @@ namespace SurfLevel.Domain.Test
             Assert.AreEqual(3, result.SelectMany(p => p.Prices).Count());
 
             // вместимость до 2 человек
-            Assert.AreEqual(2, result.SelectMany(p => p.Prices).Max(p => p.Accommodation.Сapacity));
+            Assert.AreEqual(2, result.SelectMany(p => p.Prices).Max(p => p.Accommodation.Capacity));
         }
     } 
 }

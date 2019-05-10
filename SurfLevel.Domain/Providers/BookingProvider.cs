@@ -84,7 +84,7 @@ namespace SurfLevel.Domain.Providers
 
             var locale = _localeService.GetUserLocale();
 
-            var commission = _comissionLocales.List.Contains(locale);
+            var commission = _comissionLocales?.CommissionLocalesList.Contains(locale) ?? false;
 
             var packages = await _packages.GetPackagesByConditionAsync(p =>
                 bookingForm.Services.Select(s => s.PackageId).Distinct().Contains(p.Id));
@@ -103,6 +103,7 @@ namespace SurfLevel.Domain.Providers
                 GuestName = bookingForm.Name,
                 GuestSecondName = bookingForm.SecondName,
                 Locale = locale,
+                IsCommission = commission,
                 Guests = Enumerable.Range(1, bookingForm.Pax).Select(p => new Guest()).ToArray()
             };
 
@@ -117,7 +118,6 @@ namespace SurfLevel.Domain.Providers
                     PackageId = package.Id,
                     AccommodationPriceId = price.Item1,
                     ServiceDays = price.Item1.HasValue? (int?)null : service.Pax,
-                    PrepayPercent = commission ? package.Percent : (decimal?)null,
                     Price = price.Item2
                 });
             }

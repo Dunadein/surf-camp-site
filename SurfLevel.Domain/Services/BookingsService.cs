@@ -32,7 +32,7 @@ namespace SurfLevel.Domain.Services
                    GrouppingByOrder = p.Services.GroupBy(t => t.AccommodationPrice?.RoomId).Select(g => new 
                    {
                        RoomKey = g.Key,
-                       Pax = g.Key.HasValue ? Math.Max(g.Count(), g.Max(t => t.AccommodationPrice.Accommodation.Сapacity)) : g.Count()
+                       Pax = g.Key.HasValue ? Math.Max(g.Count(), g.Max(t => t.AccommodationPrice.Accommodation.Capacity)) : g.Count()
                    })
                })
                .SelectMany(p => p.Dates.Select(d => new { Date = d, p.GrouppingByOrder })).GroupBy(p => p.Date).Select(p => new DateWithGroupingByRoom()

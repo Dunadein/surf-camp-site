@@ -17,12 +17,12 @@ namespace SurfLevel.Web.Controllers
             _provider = bookingProvider;
         }
 
-        [HttpGet("get-price/{hash:string}")]
+        [HttpGet("get-price/{hash}")]
         public async Task<decimal> GetTotalPrice(string hash, [FromBody]IEnumerable<PickedService> services)
             => await _provider.CalculateTotalPrice(services, hash);
 
         [HttpPost("create-booking")]
-        public async Task<string> CreateNewOrder([FromForm]BookingForm bookingForm)
+        public async Task<string> CreateNewOrder([FromBody]BookingForm bookingForm)
             => await _provider.CreateBooking(bookingForm);
     }
 }

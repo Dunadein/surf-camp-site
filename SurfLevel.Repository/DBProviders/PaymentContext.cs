@@ -11,5 +11,13 @@ namespace SurfLevel.Repository.DBProviders
         }
 
         public DbSet<PayLog> PayLogs { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<PayLog>(entity =>
+            {
+                entity.ToTable("PayLog");
+            });
+        }
     }
 }

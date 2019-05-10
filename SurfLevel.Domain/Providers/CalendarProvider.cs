@@ -26,7 +26,7 @@ namespace SurfLevel.Domain.Providers
             var accommodations = await _accommodationRepository.GetAccommodationsAsync(p => p.IsEnabled);
             // максимальная вместимость жилья
             var maxPax = accommodations.SelectMany(p => p.Rooms).Sum(t => 
-                t.Prices.Max(p => p.Accommodation.Сapacity)
+                t.Prices.Max(p => p.Accommodation.Capacity)
             );
 
             // получаем загрузку по броням

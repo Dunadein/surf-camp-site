@@ -114,7 +114,7 @@ namespace SurfLevel.Domain.Providers
                 })
             };
 
-            if (order.Services.Any(p => p.PrepayPercent.HasValue) && order.Status != OrderStatus.Payed)
+            if (order.IsCommission && order.Status != OrderStatus.Payed)
             {                
                 viewOrder.Prepayment = await GetPrepaymentInfo(order);
             }

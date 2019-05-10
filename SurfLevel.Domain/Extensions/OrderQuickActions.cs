@@ -13,8 +13,11 @@ namespace SurfLevel.Domain.Extensions
 
         public static decimal SurchargeAmount(this Order order, Func<Service, bool> condition = null)
         {
-            return Math.Round(order.Services.Where(p => p.PrepayPercent.HasValue && condition != null ? condition(p) : true)
-                .Sum(p => p.Price * p.PrepayPercent.Value / 100) / 5.0m
+            if (!order.IsCommission)
+                return 0;
+
+            return Math.Round(order.Services.Where(p => condition != null ? condition(p) : true)
+                .Sum(p => p.Price * p.Package.Percent / 100) / 5.0m
             ) * 5;
         }
     }

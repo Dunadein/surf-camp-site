@@ -55,7 +55,7 @@ namespace SurfLevel.Domain.Test.Common
             return new Accommodation()
             {
                 Id = pax,
-                Сapacity = pax
+                Capacity = pax
             };
         }
 

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace SurfLevel.Domain.Providers.Interfaces
 {
-    public interface IBookingProvider
+    public interface IBookingProvider : IHashedProvider
     {
         Task<decimal> CalculateTotalPrice(IEnumerable<PickedService> services, string hash);
 

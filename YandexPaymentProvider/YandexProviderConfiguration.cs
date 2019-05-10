@@ -10,7 +10,6 @@ namespace YandexPaymentProvider
         {            
             services.AddSingleton<IYandexProviderRepository>(repo => 
                 new YandexProviderRepository(connectionString));
-            services.AddSingleton<IYandexPaymentProvider, PaymentProvider>();
 
             return services;
         }

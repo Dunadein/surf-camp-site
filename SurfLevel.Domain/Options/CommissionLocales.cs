@@ -2,6 +2,6 @@
 {
     public class CommissionLocales
     {
-        public string[] List { get; set; }
+        public string[] CommissionLocalesList { get; set; }
     }
 }

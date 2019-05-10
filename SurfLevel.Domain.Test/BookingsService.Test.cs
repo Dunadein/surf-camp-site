@@ -36,7 +36,7 @@ namespace SurfLevel.Domain.Test
 
             var accommodations = await _accommodationRepository.GetAccommodationsAsync();
             var maxPax = accommodations.Where(p => p.IsEnabled).SelectMany(p => p.Rooms).Sum(t =>
-                t.Prices.Max(p => p.Accommodation.Сapacity)
+                t.Prices.Max(p => p.Accommodation.Capacity)
             );
 
             // вернулось 16 дней
@@ -71,7 +71,7 @@ namespace SurfLevel.Domain.Test
 
             var accommodations = await _accommodationRepository.GetAccommodationsAsync();
             var maxPax = accommodations.Where(p => p.IsEnabled).SelectMany(p => p.Rooms).Sum(t =>
-                t.Prices.Max(p => p.Accommodation.Сapacity)
+                t.Prices.Max(p => p.Accommodation.Capacity)
             );
 
             // ни в один из дней нет максимальной загрузки (1 место свободно), хотя в один из дней есть овербукинг под запрос

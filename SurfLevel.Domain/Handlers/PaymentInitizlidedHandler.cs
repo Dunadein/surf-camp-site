@@ -21,8 +21,8 @@ namespace SurfLevel.Domain.Handlers
         {
             var row = new PayLog()
             {
-                Amount = data.Amount,
-                FullAmount = data.AmountToPay,
+                IncomeAmount = data.Amount,
+                Amount = data.AmountToPay,
                 Direction = Direction.Out,
                 OrderId = data.OrderId,
                 RequestId = data.RequestId,

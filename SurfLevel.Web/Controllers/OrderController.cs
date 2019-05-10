@@ -17,15 +17,15 @@ namespace SurfLevel.Web.Controllers
             _provider = orderProvider;
         }
 
-        [HttpGet("get-order/{id:string}")]
+        [HttpGet("get-order/{id}")]
         public async Task<ViewOrder> GetOrder(string id)
             => await _provider.GetOrder(id);
 
-        [HttpPost("make-prepayment/{id:string}")]
+        [HttpPost("make-prepayment/{id}")]
         public async Task<IActionResult> RedirectToPaymentProvider(string id, [FromForm]PrepayType type, [FromForm]int? serviceId = null)
             => Redirect(await _provider.GetPaymentUrl(id, type, serviceId));
 
-        [HttpPost("save-guest/{id:string}")]
+        [HttpPost("save-guest/{id}")]
         public async Task SaveGuest(string id, [FromForm]int guestNumber, [FromForm] string name, [FromForm]string lastname)
             => await _provider.UpdateGuest(id, guestNumber, name, lastname);
     }

@@ -34,7 +34,7 @@ namespace SurfLevel.Domain.Test.Common
 
         private AccommodationPrice GetAccommodationPrice(int roomId, int pax)
         {
-            return GetAccommodationPrices().FirstOrDefault(p => p.RoomId == roomId && p.Accommodation.Сapacity == pax);
+            return GetAccommodationPrices().FirstOrDefault(p => p.RoomId == roomId && p.Accommodation.Capacity == pax);
         }
     }
 }

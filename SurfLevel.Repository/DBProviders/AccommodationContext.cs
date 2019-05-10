@@ -20,7 +20,31 @@ namespace SurfLevel.Repository.DBProviders
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AccommodationPrice>().HasKey(x => new { x.RoomId, x.AccommodationId });
+            modelBuilder.Entity<AccommodationPrice>(entity =>
+            {
+                entity.ToTable("AccommodationPrice");
+                entity.HasOne(p => p.Accommodation).WithMany()
+                    .HasForeignKey(r => r.AccommodationId);                
+            });
+
+            modelBuilder.Entity<Villa>(entity =>
+            {
+                entity.ToTable("Villa");
+                entity.HasMany(p => p.Rooms).WithOne()
+                    .HasForeignKey(p => p.VillaId);
+            });
+
+            modelBuilder.Entity<Room>(entity =>
+            {
+                entity.ToTable("Room");
+                entity.HasMany(p => p.Prices).WithOne()
+                    .HasForeignKey(p => p.RoomId);
+            });
+
+            modelBuilder.Entity<Accommodation>(entity =>
+            {
+                entity.ToTable("Accommodation");
+            });
         }
     }
 }

@@ -33,7 +33,7 @@ namespace SurfLevel.Domain.Handlers
                 var inRow = new PayLog()
                 {
                     Direction = Direction.In,
-                    Amount = outRow.Amount,
+                    IncomeAmount = outRow.IncomeAmount,
                     EuroAmount = outRow.EuroAmount,
                     OrderId = outRow.OrderId,
                     RequestId = outRow.RequestId,
@@ -47,7 +47,7 @@ namespace SurfLevel.Domain.Handlers
 
                 await _bookingRepository.UpdateOrderAsync(outRow.OrderId, p => p.Payed += outRow.EuroAmount);
 
-                await _bus.Publish(new PaymentProvided() { OrderId = outRow.OrderId, Amount = outRow.Amount });
+                await _bus.Publish(new PaymentProvided() { OrderId = outRow.OrderId, Amount = outRow.IncomeAmount });
             }
         }
     }

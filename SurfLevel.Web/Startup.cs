@@ -1,14 +1,15 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SurfLevel.Domain.Options;
 using SurfLevel.Domain.Payments;
-using SurfLevel.Repository.DBProviders;
 using SurfLevel.Web.Infrastructure.Extensions;
 using System;
+using System.Reflection;
 using YandexPaymentProvider;
 
 namespace SurfLevel.Web
@@ -35,40 +36,30 @@ namespace SurfLevel.Web
 
             services.AddHttpContextAccessor();
 
-            services.AddLocalizedSpaStaticFiles(
-                availableLocales: Configuration.GetSection("SupportedLocales").Get<string[]>(),
-                spaRootPath: "dist",
-                localeCookieName: Configuration["LocaleCookieName"]
+            services.ConfigurateOptions(Configuration);
+
+            services.RegisterRepositories(Configuration.GetConnectionString("DBConnection"));
+
+            services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
+
+            services.RegisterServices();            
+
+            services.RegisterProviders();
+
+            services.RegisterPaymentService(
+                Configuration.GetConnectionString("DBConnection"),
+                Configuration.Get<PaymentOptions>()
             );
 
-            services.AddHttpClient<YandexPaymentService>(client =>
-            {
-                client.BaseAddress = new Uri(Configuration.GetSection("PaymentOptions")["BankApiURI"]);
-                client.Timeout = TimeSpan.FromSeconds(5);
-            });
-
-            services.AddHttpClient<PaymentProvider>(client =>
-            {
-                client.BaseAddress = new Uri(Configuration.GetSection("PaymentOptions")["YandexApiURI"]);
-                client.Timeout = TimeSpan.FromSeconds(5);
-            });
+            services.AddLocalizedSpaStaticFiles(
+                Configuration.Get<LocalizationSettings>(),
+                Configuration["SpaRootFolder"]
+            );
 
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
-            });
-
-            services.AddEntityFrameworkMySql()
-            .AddDbContext<BookingContext>(options => 
-                options.UseMySql(Configuration.GetConnectionString("DBConnection")))
-            .AddDbContext<AccommodationContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("DBConnection")))
-            .AddDbContext<PackageContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("DBConnection")))
-            .AddDbContext<PaymentContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("DBConnection")));
-            
-            services.AddYandexProvider(Configuration.GetConnectionString("DBConnection"));
+            });            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,7 +77,7 @@ namespace SurfLevel.Web
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();            
+            app.UseHttpsRedirection();
 
             app.UseMvc(routes =>
             {

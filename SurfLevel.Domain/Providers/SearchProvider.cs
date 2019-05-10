@@ -69,7 +69,7 @@ namespace SurfLevel.Domain.Providers
             if (package == null)
                 throw new ArgumentNullException("The package not found.");
 
-            if (!package.OutOfServicePeriods.Any(t => t.Start <= request.From && t.End >= request.Till))
+            if (package.OutOfServicePeriods.Any(t => t.Start <= request.From && t.End >= request.Till))
                 throw new ArgumentException("The package is not available.");
 
             return package;
@@ -183,7 +183,7 @@ namespace SurfLevel.Domain.Providers
                             Folder = room.DescriptionFolder,
                             Id = room.Id,
                             Prices = suitable[room.Id],
-                            MaxPax = room.Prices.Max(p => p.Accommodation.Сapacity)
+                            MaxPax = room.Prices.Max(p => p.Accommodation.Capacity)
                         });
                     }
 

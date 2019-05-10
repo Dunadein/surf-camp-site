@@ -2,20 +2,26 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using SurfLevel.Contracts.Interfaces.Services;
+using SurfLevel.Domain.Options;
 using SurfLevel.Domain.Providers;
 using SurfLevel.Domain.Services;
 
 namespace SurfLevel.Web.Infrastructure.Extensions
 {
-    public static class LocalizedSpaStaticFilesExtensions
+    internal static class LocalizedSpaStaticFilesExtensions
     {
         public static void AddLocalizedSpaStaticFiles(this IServiceCollection services,
-            string[] availableLocales, string spaRootPath, string localeCookieName)
+            LocalizationSettings settings,
+            string spaRootPath)
         {
             services.AddTransient<ILocaleService>(serviceProvider =>
             {
                 var httpContextAccessor = serviceProvider.GetRequiredService<IHttpContextAccessor>();
-                return new LocaleByLangService(httpContextAccessor, availableLocales, localeCookieName);
+                return new LocaleByLangService(
+                    httpContextAccessor,
+                    settings.SupportedLocales,
+                    settings.LocaleCookieName
+                );
             });
             services.AddTransient(serviceProvider =>
             {

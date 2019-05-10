@@ -23,23 +23,23 @@ namespace SurfLevel.Web.Controllers
         public async Task<string> MakeHashedRequest([FromBody]SearchRequest request)
             => await _searchProvider.GetHashedRequestAsync(request);
 
-        [HttpGet("get-request/{hash:string?}")]
+        [HttpGet("get-request/{hash?}")]
         public async Task<SearchRequest> GetSearchRequest([FromRoute]string hash)
             => await _searchProvider.GetRequestFromHashAsync(hash);
 
-        [HttpGet("get-available-packages/{hash:string?}")]
+        [HttpGet("get-available-packages/{hash?}")]
         public async Task<IEnumerable<ViewPackageWithId>> GetAvailablePackages([FromRoute]string hash)
             => await _searchProvider.SearchAvailablePackagesAsync(hash);
 
-        [HttpGet("get-service-prices/{hash:string}")]
+        [HttpGet("get-service-prices/{hash}")]
         public async Task<IEnumerable<PaxPrice>> GetServicePackagePrices([FromRoute]string hash, [FromBody]int packageId)
             => await _searchProvider.SearchPackagePrices(hash, packageId);
 
-        [HttpGet("get-accommodation-prices/{hash:string}")]
+        [HttpGet("get-accommodation-prices/{hash}")]
         public async Task<IDictionary<int, List<PaxPrice>>> GetServiceWithAccommodationPackagePrices([FromRoute]string hash, [FromBody]int packageId)
             => await _searchProvider.SearchPackageWithAccommodationPrices(hash, packageId);
 
-        [HttpGet("{hash:string?}")]
+        [HttpGet("{hash?}")]
         public async Task<SearchByDefaultResult> GetDefaultSearchResult([FromRoute]string hash)
             => await _searchProvider.SearchByDefaultAsync(hash);
     }

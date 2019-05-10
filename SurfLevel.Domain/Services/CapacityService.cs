@@ -35,9 +35,9 @@ namespace SurfLevel.Domain.Services
             var prices = rooms.SelectMany(p => p.Prices.Select(t => new
                 {
                     Price = t,
-                    MaxPax = p.Prices.Max(m => m.Accommodation.Сapacity)
+                    MaxPax = p.Prices.Max(m => m.Accommodation.Capacity)
                 }))
-                .Where(p => !occupied.Any(t => t.RoomId == p.Price.RoomId && p.MaxPax - t.Taken < p.Price.Accommodation.Сapacity))
+                .Where(p => !occupied.Any(t => t.RoomId == p.Price.RoomId && p.MaxPax - t.Taken < p.Price.Accommodation.Capacity))
                 .Select(p => p.Price).ToList();
 
             return prices;
@@ -51,19 +51,19 @@ namespace SurfLevel.Domain.Services
 
             var prices = await GetAvailableVariants(rooms, periodStart, periodEnd);
 
-            var result = new List<Room>();
-
-            var forbiddenVillas = new List<int>();
+            var notIncludedRooms = new List<int>();
             // если можно поселить всю группу на виллу без ограничений по съему
             if (accommodations.Any(p => !p.MinPaxForRent.HasValue
-                && p.Rooms.Any(t => prices.Any(s => s.RoomId == t.Id && s.Accommodation.Сapacity >= pax))))
+                && p.Rooms.Any(t => prices.Any(s => s.RoomId == t.Id && s.Accommodation.Capacity >= pax))))
             {
-                forbiddenVillas = accommodations.Where(p => p.MinPaxForRent.HasValue).Select(v => v.Id).ToList();
+                notIncludedRooms = accommodations.Where(p => p.MinPaxForRent.HasValue)
+                    .SelectMany(v => v.Rooms.Select(t => t.Id)).ToList();
             }
 
-            foreach(var groupedPrices in prices.GroupBy(p => p.RoomId))
+            var result = new List<Room>();
+            foreach (var groupedPrices in prices.GroupBy(p => p.RoomId))
             {
-                if (!forbiddenVillas.Contains(groupedPrices.Key))
+                if (!notIncludedRooms.Contains(groupedPrices.Key))
                 {
                     var baseRoom = rooms.FirstOrDefault(p => p.Id == groupedPrices.Key);
 
@@ -79,10 +79,10 @@ namespace SurfLevel.Domain.Services
                     {
                         // если эта комната позволяет поселить всю группу, то добавляются только цены на всю группу
                         // или добавляются цены, которые позволяют в паре с другими комнатами расселить всех
-                        if (price.Accommodation.Сapacity < pax && (
-                            groupedPrices.Any(p => p.Accommodation.Сapacity >= pax)
-                            && price.Accommodation.Сapacity + prices.GroupBy(p => p.RoomId)
-                                .Sum(t => t.Key == price.RoomId ? 0 : t.Max(s => s.Accommodation.Сapacity)) < pax
+                        if (price.Accommodation.Capacity < pax && (
+                            groupedPrices.Any(p => p.Accommodation.Capacity >= pax)
+                            && price.Accommodation.Capacity + prices.GroupBy(p => p.RoomId)
+                                .Sum(t => t.Key == price.RoomId ? 0 : t.Max(s => s.Accommodation.Capacity)) < pax
                         ))
                             continue;                        
                         

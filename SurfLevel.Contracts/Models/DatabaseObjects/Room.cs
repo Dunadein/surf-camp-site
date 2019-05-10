@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SurfLevel.Contracts.Models.DatabaseObjects
 {
@@ -10,9 +11,13 @@ namespace SurfLevel.Contracts.Models.DatabaseObjects
         }
 
         #region Columns
+        [Column("r_Id")]
         public int Id { get; set; }
+        [Column("r_vId")]
         public int VillaId { get; set; }
+        [Column("r_Name")]
         public string Name { get; set; }
+        [Column("r_Description")]
         public string DescriptionFolder { get; set; }
         #endregion
 

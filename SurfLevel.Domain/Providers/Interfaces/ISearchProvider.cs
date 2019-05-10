@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SurfLevel.Domain.Providers.Interfaces
 {
-    public interface ISearchProvider
+    public interface ISearchProvider : IHashedProvider
     {
         Task<string> GetHashedRequestAsync(SearchRequest request);
 

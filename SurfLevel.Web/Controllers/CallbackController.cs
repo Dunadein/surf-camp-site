@@ -25,7 +25,7 @@ namespace SurfLevel.Web.Controllers
             [FromQuery(Name = "id")]string orderHash)
             => Redirect(string.Format(_options.ProcessingPageTemplate, orderHash, yandexRequestId));
 
-        [HttpGet("get-status/{id:string}")]
+        [HttpGet("get-status/{id}")]
         public async Task<PaymentStatus> GetPaymentStatus([FromBody]string requestId)
             => await _callback.CheckPayment(requestId);
     }

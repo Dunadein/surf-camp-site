@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace SurfLevel.Domain.Providers.Interfaces
 {
-    public interface IOrderProvider
+    public interface IOrderProvider : IHashedProvider
     {
         Task<ViewOrder> GetOrder(string orderId);
 
